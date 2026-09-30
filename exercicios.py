@@ -95,6 +95,8 @@ try:
      locadora.alugar("6342537")  
 except VeiculoIndisponivelError as erro:
     print(f"Operação negada: {erro} já está alugado.")
+except VeiculoNaoEncontradoError as erro:
+    print(f"Operação negada: {erro} não foi encontrado na locadora.")
 
 for veiculo in locadora.disponiveis():
         print(veiculo)  
