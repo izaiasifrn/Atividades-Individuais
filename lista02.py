@@ -47,3 +47,33 @@ except ValueError as erro:
 except SalarioInvalidoError as erro:
     print(f"Operação negada: {erro} é menor do que um salario minimo")
 
+
+# Cadastrar emails
+
+#regras: ter @ e . no endereco se nao vai dar erro
+# dados: endereco do email
+
+class ErroDeEmail(Exception):
+    pass
+
+class EmailInvalidoError(ErroDeEmail):
+    pass
+
+class Email:
+    def __init__(self, endereco: str) -> None:
+        self.endereco = endereco
+
+    @property
+    def endereco(self) -> str:
+        return self._endereco
+
+    @endereco.setter
+    def endereco(self, endereco: str) -> None:
+        if not ("@" in endereco and "." in endereco):
+            raise EmailInvalidoError(endereco)
+        self._endereco = endereco
+
+try:
+    email = Email("IzaiasRodriguesDantas.gmailcom")
+except ErroDeEmail as erro:
+    print(f"Operacao negada: {erro} não apresenta '@' e/ou '.'")
