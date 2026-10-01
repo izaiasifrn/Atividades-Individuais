@@ -8,7 +8,7 @@
 
 #5º MeuErro herda o comportamento de exception, a mae de quase todas as exceções do python, onde esse comportamento é guardar uma mensagem e mostrar resumidamente entre outros comportamentos
 
-#Cadastro com Validacao
+# Cadastro com Validacao
 class ErroDeSalario(Exception):
     pass
 
@@ -77,3 +77,85 @@ try:
     email = Email("IzaiasRodriguesDantas.gmailcom")
 except ErroDeEmail as erro:
     print(f"Operacao negada: {erro} não apresenta '@' e/ou '.'")
+
+
+#Conta Bancaria
+class ErroDeConta(Exception):
+    pass
+class ValorInvalidoError(ErroDeConta):
+    pass
+class SaldoInsuficienteError(ErroDeConta):
+    pass
+class LimiteExcedidoError(ErroDeConta):
+    pass
+
+
+class ContaBancaria:
+    def __init__(self, saldo: float) -> None:
+        self._saldo = saldo
+
+    #verifica se o saldo é 0 ou maior
+    @property
+    def saldo(self) -> None:
+        return self._saldo
+
+
+    #metodo auxiliar de validacão
+    def _validar_valor_positivo(self, valor: float) -> None:
+        if not (valor > 0):
+            raise ValorInvalidoError(valor)
+ 
+    #metodos
+    def depositar(self, valor: float) -> None:
+        self._validar_valor_positivo(valor)
+        self._saldo += valor
+        
+
+    def sacar(self, valor: float) -> None:
+        self._validar_valor_positivo(valor)
+        if valor > self._saldo:
+            raise SaldoInsuficienteError(valor)
+        
+        if valor > 1000:
+            raise LimiteExcedidoError(valor)
+        
+        self._saldo -= valor
+
+
+conta = ContaBancaria(0.0)
+
+while True:
+    print("Digite:")
+    print(f"1 - Depositar")
+    print(f"2 - Sacar")
+    print(f"3 - Ver Saldo")
+    print(f"4 - Sair")
+    resposta = input(f"Escolha: ")
+
+    if resposta == "1":
+        try:
+            deposito_valor = float(input("Digite o valor do qual voce quer depositar: "))
+            conta.depositar(deposito_valor)
+        except ValueError as erro:
+            print(f"Por favor, digite um numero float/int ({erro})")
+        except ErroDeConta as erro:
+            print(f"Operacao negada: {erro}")
+        
+    elif resposta == "2":
+        try:
+            saque_valor = float(input(f"Digite o valor do saque que voce quer executar: "))
+            conta.sacar(saque_valor)
+        except ValueError as erro:
+            print(f"Por favor, digite um numero float/int ({erro})")
+        except ErroDeConta as erro:
+            print(f"Operacao negada: ({erro})")
+
+    elif resposta == "3":
+        print(f"Seu saldo atual é: {conta.saldo}")
+
+    elif resposta == "4":
+        print(f"Saindo do Banco...")
+        break
+
+    else:
+        print(f"Essa opção é inexistente, por favor, tente novamente")
